@@ -1,10 +1,11 @@
 package web
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/huangyul/go-server/internal/domain"
 	"github.com/huangyul/go-server/internal/service"
 
 	regexp "github.com/dlclark/regexp2"
@@ -66,8 +67,17 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Printf("%v", req)
-	ctx.JSON(http.StatusOK, req)
+	err = u.srv.SignUp(ctx, &domain.User{Password: req.Password, Email: req.Email})
+	if errors.Is(err, errors.New("邮箱冲突")) {
+		ctx.String(http.StatusInternalServerError, "邮箱冲突")
+		return
+	}
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "系统错误")
+		return
+	}
+
+	ctx.String(http.StatusOK, "注册成功")
 }
 
 func (u *UserHandler) Login(ctx *gin.Context) {}
