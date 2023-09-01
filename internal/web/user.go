@@ -2,6 +2,7 @@ package web
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,7 @@ func NewUserHandler(srv *service.UserService) *UserHandler {
 
 func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	server.POST("/user/signup", u.Signup)
-	server.GET("/user/login", u.Login)
+	server.POST("/user/login", u.Login)
 }
 
 func (u *UserHandler) Signup(ctx *gin.Context) {
@@ -80,4 +81,34 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "注册成功")
 }
 
-func (u *UserHandler) Login(ctx *gin.Context) {}
+func (u *UserHandler) Login(ctx *gin.Context) {
+	type Req struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	var req Req
+	err := ctx.Bind(&req)
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "系统错误")
+		return
+	}
+	uDomian := domain.User{
+		Password: req.Password,
+		Email:    req.Email,
+	}
+	token, err := u.srv.FindByEmail(ctx, uDomian)
+	if errors.Is(err, service.ErrNotFound) {
+		ctx.String(http.StatusOK, "user not exist")
+		return
+	}
+	if errors.Is(err, service.ErrInvalidUserOrPassword) {
+		ctx.String(http.StatusOK, "Incorrect email or passwrod")
+		return
+	}
+	if err != nil {
+		ctx.String(http.StatusOK, err.Error())
+		return
+	}
+	res := fmt.Sprintf(`login successful, token is %s`, token)
+	ctx.String(http.StatusOK, res)
+}

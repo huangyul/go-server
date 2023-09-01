@@ -8,6 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var ErrNotFound = gorm.ErrRecordNotFound
+
 type UserDAO struct {
 	db *gorm.DB
 }
@@ -26,6 +28,12 @@ func (dao *UserDAO) Insert(ctx *gin.Context, u User) error {
 		}
 	}
 	return err
+}
+
+func (dao *UserDAO) FindByEmail(ctx *gin.Context, u User) (User, error) {
+	var user User
+	err := dao.db.WithContext(ctx).Where("email = ?", u.Email).First(&user).Error
+	return user, err
 }
 
 type User struct {
