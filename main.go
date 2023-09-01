@@ -4,11 +4,14 @@ import (
 	"strings"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/huangyul/go-server/internal/repository"
 	"github.com/huangyul/go-server/internal/repository/dao"
 	"github.com/huangyul/go-server/internal/service"
 	"github.com/huangyul/go-server/internal/web"
+	"github.com/huangyul/go-server/internal/web/middleware"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -53,6 +56,11 @@ func main() {
 			return strings.HasPrefix(origin, "http://localhost")
 		},
 	}))
+
+	store := cookie.NewStore([]byte("secret"))
+	server.Use(sessions.Sessions("mysession", store))
+
+	server.Use(middleware.NewLoginMiddlewareBuilder().IgnorePaths("/user/login").IgnorePaths("/user/signup").Build())
 
 	user.RegisterRoutes(server)
 

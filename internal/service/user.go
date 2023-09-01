@@ -32,17 +32,17 @@ func (srv *UserService) SignUp(ctx *gin.Context, user *domain.User) error {
 	return srv.repo.Create(ctx, user)
 }
 
-func (srv *UserService) FindByEmail(ctx *gin.Context, user domain.User) (string, error) {
+func (srv *UserService) FindByEmail(ctx *gin.Context, user domain.User) (domain.User, error) {
 	u, err := srv.repo.FindByEmail(ctx, user)
 	if errors.Is(err, ErrNotFound) {
-		return "", ErrNotFound
+		return u, ErrNotFound
 	}
 	if err != nil {
-		return "", err
+		return u, err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(user.Password))
 	if err != nil {
-		return "", ErrInvalidUserOrPassword
+		return u, ErrInvalidUserOrPassword
 	}
-	return "", nil
+	return u, nil
 }

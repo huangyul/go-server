@@ -2,9 +2,9 @@ package web
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/huangyul/go-server/internal/domain"
 	"github.com/huangyul/go-server/internal/service"
@@ -32,6 +32,7 @@ func NewUserHandler(srv *service.UserService) *UserHandler {
 func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	server.POST("/user/signup", u.Signup)
 	server.POST("/user/login", u.Login)
+	server.POST("/user/profile", u.Profile)
 }
 
 func (u *UserHandler) Signup(ctx *gin.Context) {
@@ -96,7 +97,7 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 		Password: req.Password,
 		Email:    req.Email,
 	}
-	token, err := u.srv.FindByEmail(ctx, uDomian)
+	uDomain, err := u.srv.FindByEmail(ctx, uDomian)
 	if errors.Is(err, service.ErrNotFound) {
 		ctx.String(http.StatusOK, "user not exist")
 		return
@@ -109,6 +110,15 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 		ctx.String(http.StatusOK, err.Error())
 		return
 	}
-	res := fmt.Sprintf(`login successful, token is %s`, token)
-	ctx.String(http.StatusOK, res)
+
+	sess := sessions.Default(ctx)
+	sess.Set("userId", uDomain.ID)
+	sess.Options(sessions.Options{
+		MaxAge: 60,
+	})
+	sess.Save()
+
+	ctx.String(http.StatusOK, "login successful")
 }
+
+func (h *UserHandler) Profile(ctx *gin.Context) {}
