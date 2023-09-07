@@ -1,0 +1,107 @@
+{
+  "code": 200,
+  "msg": "获取分享二维码成功！",
+  "data": {
+      "store": {
+          "store_name": "展会大管家门店",
+          "address": "广州展会",
+          "tel": ""
+      },
+      "user": {
+          "name": "Yul",
+          "avatar": "https://thirdwx.qlogo.cn/mmopen/vi_32/gJdYS9asHZUULXNrKr3a5J6PKiaECicf0AIuTJWu5u90Yzg2oMKJpgeIDoibqoHUaIqqFNlUhic2ZNaQXGt9KvCHkQ/132"
+      },
+      "poster": {
+          "id": 189,
+          "marketing_activity_id": null,
+          "marketing_id": 1,
+          "name": null,
+          "background_img_id": 278,
+          "logo_switch": 1,
+          "logo_size": 20,
+          "logo_x": 15,
+          "logo_y": 15,
+          "store_name_switch": 1,
+          "store_name_size": 14,
+          "store_name_font": null,
+          "store_name_color": "FFFFFF",
+          "name_x": 10,
+          "name_y": 10,
+          "store_addr_switch": 1,
+          "store_addr_size": 14,
+          "store_addr_font": null,
+          "store_addr_color": "FFFFFF",
+          "addr_x": 153,
+          "addr_y": 522,
+          "store_phone_switch": 2,
+          "store_phone_size": 14,
+          "store_phone_font": null,
+          "store_phone_color": "FFFFFF",
+          "phone_x": 153,
+          "phone_y": 522,
+          "mini_code_switch": 1,
+          "mini_code_size": 100,
+          "mini_code_x": 16,
+          "mini_code_y": 442,
+          "diy_text_switch": 1,
+          "diy_text_size": 14,
+          "diy_text_font": null,
+          "diy_text_color": "FFFFFF",
+          "diy_text": null,
+          "diy_text_x": 10,
+          "diy_text_y": 385,
+          "poster_url": "/poster/20230906/postergK30019.png",
+          "wechat_logo_switch": 1,
+          "wechat_logo_x": 172,
+          "wechat_logo_y": 470,
+          "wechat_logo_color": "FFFFFF",
+          "state": 1,
+          "created_at": "2023-09-06 11:22:29",
+          "updated_at": "2023-09-06 11:22:29",
+          "background": {
+              "id": 278,
+              "img": "https://img.wxapp.zs-shiruan.cn/storage/wxappadmin/template/202308/169337525522683184.png"
+          }
+      },
+      "bg": [
+          {
+              "id": 243,
+              "marketing_id": 1,
+              "type": 0,
+              "marketing_activity_id": 3367,
+              "img": "/static/static/lottery/bg-template-1.jpg",
+              "created_at": "2023-09-06 11:22:30",
+              "updated_at": "2023-09-06 11:22:30"
+          },
+          {
+              "id": 244,
+              "marketing_id": 1,
+              "type": 0,
+              "marketing_activity_id": 3367,
+              "img": "/static/static/lottery/bg-template-2.jpg",
+              "created_at": "2023-09-06 11:22:30",
+              "updated_at": "2023-09-06 11:22:30"
+          },
+          {
+              "id": 245,
+              "marketing_id": 1,
+              "type": 0,
+              "marketing_activity_id": 3367,
+              "img": "/static/static/lottery/bg-template-3.jpg",
+              "created_at": "2023-09-06 11:22:30",
+              "updated_at": "2023-09-06 11:22:30"
+          },
+          {
+              "id": 246,
+              "marketing_id": 1,
+              "type": 0,
+              "marketing_activity_id": 3367,
+              "img": "/storage/wxappadmin/template/202308/169337525522683184.png",
+              "created_at": "2023-09-06 11:22:31",
+              "updated_at": "2023-09-06 11:22:31"
+          }
+      ],
+      "url": "/package-lottery/pages/lottery/jiugong?id=3827&store_id=6C8A74BB5E844017&crm_corpid=ww7155d45f511595f4&crm_userid=worbRaDQAAFBSzD44sC_3DG282QLY0CQ&miniuser_id=1373912",
+      "qrcode": "https://img.wxapp.zs-shiruan.cn/storage/wx1a33d78e0e9bd51b/lottery/ac55d336b284cb6b6a0a3731659aab34.png"
+  }
+}
