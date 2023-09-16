@@ -57,6 +57,7 @@ func main() {
 		},
 	}))
 
+	// TODO redis session
 	store := cookie.NewStore([]byte("secret"))
 	server.Use(sessions.Sessions("mysession", store))
 

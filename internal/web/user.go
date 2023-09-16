@@ -3,9 +3,11 @@ package web
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/huangyul/go-server/internal/domain"
 	"github.com/huangyul/go-server/internal/service"
 
@@ -31,7 +33,7 @@ func NewUserHandler(srv *service.UserService) *UserHandler {
 
 func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	server.POST("/user/signup", u.Signup)
-	server.POST("/user/login", u.Login)
+	server.POST("/user/login", u.LoginJWT)
 	server.POST("/user/profile", u.Profile)
 }
 
@@ -121,4 +123,61 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "login successful")
 }
 
+func (h *UserHandler) LoginJWT(ctx *gin.Context) {
+	type ReqParam struct {
+		Password string `json:"password"`
+		Email    string `json:"email"`
+	}
+	var reqParam ReqParam
+	err := ctx.Bind(&reqParam)
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "system error")
+		return
+	}
+	if reqParam.Email == "" {
+		ctx.String(http.StatusBadRequest, "email cannot be empty")
+		return
+	}
+	if reqParam.Password == "" {
+		ctx.String(http.StatusBadRequest, "password cannot be empty")
+		return
+	}
+	du := domain.User{
+		Password: reqParam.Password,
+		Email:    reqParam.Email,
+	}
+	du, err = h.srv.FindByEmail(ctx, du)
+	if err == service.ErrNotFound {
+		ctx.String(http.StatusOK, "user not found")
+		return
+	}
+	if err == service.ErrInvalidUserOrPassword {
+		ctx.String(http.StatusOK, "Incorrect emial addr or password")
+		return
+	}
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "system error")
+	}
+	claim := UserClaim{
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
+		},
+		UId:       du.ID,
+		UserAgent: ctx.Request.UserAgent(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodES256, claim)
+	tokenStr, err := token.SignedString([]byte("95osj3fUD7fo0mlYdDbncXz4VD2igvf0"))
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "system error")
+		return
+	}
+	ctx.String(http.StatusOK, tokenStr)
+}
+
 func (h *UserHandler) Profile(ctx *gin.Context) {}
+
+type UserClaim struct {
+	jwt.RegisteredClaims
+	UId       int64
+	UserAgent string
+}
